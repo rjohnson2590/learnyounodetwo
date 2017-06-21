@@ -5,20 +5,30 @@ var path = require('path');
 var ext = process.argv[3];
 var http = require('http');
 var bl = require('bl');
+var urls =[process.argv[2],process.argv[3],process.argv[4]];
+var list=[];
+var count = 0;
 
-
-function callback (res){
-    res.setEncoding('utf8');
-    res.pipe(bl(function(err, data){
-        console.log(data.length);
-        console.log(data.toString());
-    }))
-    //res.on("data", function(data){
-    //    console.log(data);
-    //})
+function print(result){
+    for(var i=0; i<result.length; i++){
+        console.log(result[i])
+    }
 }
 
-http.get(process.argv[2], callback);
+function callback (index){
+    http.get(urls[index], function(res){
+        res.setEncoding('utf8');
+        res.pipe(bl(function(err, data){
+            list[index] = data.toString();
+            count++;
+            if(count == 3){
+                print(list);
+            }
+        }));
+    })
+}
 
-
+for (var i =0; i<3; i++){
+    callback(i)
+}
 
