@@ -5,30 +5,16 @@ var path = require('path');
 var ext = process.argv[3];
 var http = require('http');
 var bl = require('bl');
-var urls =[process.argv[2],process.argv[3],process.argv[4]];
-var list=[];
-var count = 0;
+var net = require('net');
+var date = new Date();
+var month = date.getMonth()+1;
 
-function print(result){
-    for(var i=0; i<result.length; i++){
-        console.log(result[i])
-    }
-}
+var server= net.createServer(function(socket){
 
-function callback (index){
-    http.get(urls[index], function(res){
-        res.setEncoding('utf8');
-        res.pipe(bl(function(err, data){
-            list[index] = data.toString();
-            count++;
-            if(count == 3){
-                print(list);
-            }
-        }));
-    })
-}
+    socket.write(date.getFullYear()+'-'+'0'+month+'-'+date.getDate()+' '+date.getHours()+':'+date.getMinutes()+'\n')
+    socket.end();
+});
 
-for (var i =0; i<3; i++){
-    callback(i)
-}
+server.listen(process.argv[2]);
 
+//console.log(date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate()+' '+date.getHours()+':'+date.getMinutes()+'\n');
