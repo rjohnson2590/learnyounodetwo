@@ -9,12 +9,8 @@ var net = require('net');
 var date = new Date();
 var month = date.getMonth()+1;
 
-var server= net.createServer(function(socket){
-
-    socket.write(date.getFullYear()+'-'+'0'+month+'-'+date.getDate()+' '+date.getHours()+':'+date.getMinutes()+'\n')
-    socket.end();
-});
-
+var server= http.createServer(function(req, res){
+    var readStream= fs.createReadStream(process.argv[3]);
+    readStream.pipe(res);
+})
 server.listen(process.argv[2]);
-
-//console.log(date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate()+' '+date.getHours()+':'+date.getMinutes()+'\n');
