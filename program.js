@@ -8,9 +8,16 @@ var bl = require('bl');
 var net = require('net');
 var date = new Date();
 var month = date.getMonth()+1;
+var map = require('through2-map');
+var reverse= map(function (chunk) {
+    return chunk.toString().toUpperCase();
+});
+
 
 var server= http.createServer(function(req, res){
-    var readStream= fs.createReadStream(process.argv[3]);
-    readStream.pipe(res);
+
+    req.pipe(reverse).pipe(res);
 })
 server.listen(process.argv[2]);
+
+
